@@ -6,7 +6,7 @@ namespace DrivingJournal.Shared.Models
     {
         [Key]
         public int Id { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Required]
         public DateTime StartTime { get; set; }
         [Required]
@@ -16,7 +16,7 @@ namespace DrivingJournal.Shared.Models
         public float TotalKM { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public Driver Driver { get; set; }
-        public Car Car { get; set; }
+        public Driver? Driver { get; set; }
+        public Car? Car { get; set; }
     }
 }

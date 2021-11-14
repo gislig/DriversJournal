@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +12,24 @@ var connString = config.GetConnectionString("DriversJournalDB");
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connString).EnableSensitiveDataLogging());
 
 
+
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddOData(options =>
+        options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(100))
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Drivers Journal OData API", Version = "v1" });
+});
 builder.Services.AddRazorPages();
+
 
 var app = builder.Build();
 
@@ -20,6 +37,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Drivers Journal OData API");
+    });
 }
 else
 {
