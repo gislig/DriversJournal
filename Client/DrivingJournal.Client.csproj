@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Shared\DrivingJournal.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
